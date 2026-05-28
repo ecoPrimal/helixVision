@@ -1,0 +1,133 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# helixVision Deploy Graph — Field (Federation + Local Mesh)
+#
+# Usage: biomeos deploy --graph graphs/helixvision_field.toml
+
+[graph]
+name = "helixvision_field"
+description = "helixVision — field deployment with crypto signing and local mesh federation"
+version = "0.1.0"
+coordination = "sequential"
+
+[graph.metadata]
+security_model = "btsp_enforced"
+secure_by_default = true
+transport = "uds_only"
+tcp_ports = 0
+owner = "helixVision"
+pattern = "deploy"
+proto_nucleate = "primalSpring/graphs/downstream/downstream_manifest.toml"
+particle_profile = "electron_heavy"
+science_domain = "genomics"
+composition_model = "nucleated"
+deployment_mode = "field"
+federation = true
+fragments = ["tower_atomic", "sequence_atomic", "provenance_atomic", "field_atomic"]
+product = "helixvision"
+tier = 4
+
+[graph.bonding_policy]
+bond_type = "Metallic"
+trust_model = "InternalNucleus"
+tower_internal = "covalent"
+tower_to_node = "metallic"
+nucleus_internal = "weak"
+encryption_tiers.tower = "full"
+encryption_tiers.node = "delegated"
+encryption_tiers.field = "full"
+
+[graph.federation]
+enabled = true
+mesh_transport = "local"
+sign_results = true
+sync_to_lab = true
+
+[[graph.nodes]]
+name = "beardog"
+binary = "beardog"
+order = 1
+required = true
+spawn = false
+health_method = "health.liveness"
+by_capability = "security"
+capabilities = [
+    "crypto.sign",
+    "crypto.verify",
+    "genomics.vault.encrypt",
+]
+
+[[graph.nodes]]
+name = "songbird"
+binary = "songbird"
+order = 2
+required = true
+spawn = false
+depends_on = ["beardog"]
+health_method = "health.liveness"
+by_capability = "discovery"
+capabilities = [
+    "capability.discover",
+    "capability.register",
+    "federation.mesh.join",
+]
+
+[[graph.nodes]]
+name = "coralreef"
+binary = "coralreef"
+order = 3
+required = true
+spawn = false
+depends_on = ["beardog"]
+health_method = "health.liveness"
+by_capability = "shader"
+
+[[graph.nodes]]
+name = "toadstool"
+binary = "toadstool"
+order = 4
+required = true
+spawn = false
+depends_on = ["beardog", "songbird"]
+health_method = "health.liveness"
+by_capability = "compute"
+
+[[graph.nodes]]
+name = "barracuda"
+binary = "barracuda"
+order = 5
+required = true
+spawn = false
+depends_on = ["beardog"]
+health_method = "health.liveness"
+by_capability = "math"
+
+[[graph.nodes]]
+name = "rhizocrypt"
+binary = "rhizocrypt"
+order = 6
+required = true
+spawn = false
+depends_on = ["beardog"]
+health_method = "health.liveness"
+by_capability = "dag"
+
+[[graph.nodes]]
+name = "loamspine"
+binary = "loamspine"
+order = 7
+required = true
+spawn = false
+depends_on = ["beardog", "rhizocrypt"]
+health_method = "health.liveness"
+by_capability = "ledger"
+
+[[graph.nodes]]
+name = "sweetgrass"
+binary = "sweetgrass"
+order = 8
+required = true
+spawn = false
+depends_on = ["beardog", "loamspine"]
+health_method = "health.liveness"
+by_capability = "attribution"

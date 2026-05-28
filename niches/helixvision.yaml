@@ -1,0 +1,112 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# helixVision BYOB niche — sovereign genomics discovery substrate
+#
+# A sporeGarden-tier product composing NUCLEUS primals for sovereign 16S/WGS
+# pipelines, AlphaFold structure prediction (coralForge), and sample-to-publication
+# provenance. Complements initioChem (CompChem), blueFish (analytical chemistry),
+# and esotericWebb (narrative CRPG) in the garden org.
+
+name: helixvision
+description: "Sovereign genomics discovery — MinION to taxonomy on your own hardware"
+version: "0.1.0"
+
+deploy_graphs:
+  tower: "graphs/helixvision_tower.toml"
+  sequence: "graphs/helixvision_sequence.toml"
+  provenance: "graphs/helixvision_provenance.toml"
+  field: "graphs/helixvision_field.toml"
+  full: "graphs/helixvision_full.toml"
+
+organisms:
+  - name: beardog
+    role: "Sample signing, genomic vault encryption"
+    required: true
+
+  - name: songbird
+    role: "Federation between field station and lab"
+    required: true
+
+  - name: coralreef
+    role: "WGSL shader compilation — sovereign GPU stack"
+    required: false
+
+  - name: toadstool
+    role: "GPU dispatch for structure prediction and diversity analysis"
+    required: false
+
+  - name: barracuda
+    role: "f64 math primitives, alignment acceleration"
+    required: false
+
+  - name: nestgate
+    role: "FASTA/FASTQ storage, Genomic Vault"
+    required: false
+
+  - name: rhizocrypt
+    role: "Analysis session DAG — sample → processing → results"
+    required: false
+
+  - name: loamspine
+    role: "Sample certificates, chain-of-custody"
+    required: false
+
+  - name: sweetgrass
+    role: "Attribution — collector, analyst, publisher"
+    required: false
+
+  - name: squirrel
+    role: "AI-assisted interpretation of community profiles"
+    required: false
+
+  - name: petaltongue
+    role: "Community profiles, 3D structures, dashboards"
+    required: false
+
+  - name: helixvision
+    role: "Product orchestrator — genomics pipeline, field deployment, sentinel monitoring"
+    required: true
+
+interactions:
+  - type: "genomics.sample.ingest"
+    description: "Import FASTQ from sequencer or file"
+
+  - type: "genomics.16s.classify"
+    description: "16S rRNA taxonomy assignment"
+
+  - type: "genomics.wgs.assemble"
+    description: "Whole genome shotgun assembly"
+
+  - type: "genomics.diversity.profile"
+    description: "Shannon, Simpson, community composition"
+
+  - type: "genomics.structure.predict"
+    description: "AlphaFold2/3 structure prediction (coralForge)"
+
+  - type: "genomics.anomaly.detect"
+    description: "ESN classifier for community shift detection"
+
+  - type: "genomics.provenance.seal"
+    description: "Chain-of-custody from sample to publication"
+
+  - type: "genomics.sentinel.monitor"
+    description: "Real-time community monitoring (PFAS, HAB, AMR)"
+
+cost_estimates:
+  genomics.sample.ingest: { cpu: "low", memory: "medium", latency_ms: 500 }
+  genomics.16s.classify: { cpu: "high", memory: "high", latency_ms: 30000 }
+  genomics.wgs.assemble: { cpu: "high", memory: "very_high", latency_ms: 3600000 }
+  genomics.diversity.profile: { cpu: "medium", memory: "medium", latency_ms: 5000 }
+  genomics.structure.predict: { cpu: "high", memory: "very_high", latency_ms: 600000, gpu: true }
+  genomics.anomaly.detect: { cpu: "medium", memory: "medium", latency_ms: 2000, npu: true }
+  genomics.provenance.seal: { cpu: "low", memory: "low", latency_ms: 500 }
+  genomics.sentinel.monitor: { cpu: "low", memory: "low", latency_ms: 100, streaming: true }
+
+operation_dependencies:
+  genomics.16s.classify: ["genomics.sample.ingest"]
+  genomics.wgs.assemble: ["genomics.sample.ingest"]
+  genomics.diversity.profile: ["genomics.16s.classify"]
+  genomics.structure.predict: ["genomics.wgs.assemble"]
+  genomics.anomaly.detect: ["genomics.diversity.profile"]
+  genomics.provenance.seal: ["genomics.16s.classify"]
+  genomics.sentinel.monitor: ["genomics.diversity.profile"]
